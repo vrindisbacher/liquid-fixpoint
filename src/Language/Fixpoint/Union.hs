@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 module Language.Fixpoint.Union where
-import Data.HashMap.Strict (lookup, insert, HashMap, empty)
+import Data.IntMap.Strict (lookup, insert, IntMap, empty)
 import Prelude hiding (lookup)
 import Language.Fixpoint.Types (Sort(..))
 
@@ -32,14 +32,14 @@ unionVals uf (FTC s1) (FTC s2) | s1 == s2 = uf
 unionVals _ s1 s2 = error ("Cannot unify " ++ show s1 ++ " and " ++ show s2)
 
 
-newtype UF = MkUF (HashMap Int Sort) deriving (Show)
+newtype UF = MkUF (IntMap Sort) deriving (Show)
 new :: UF
 new = MkUF empty
 
 union :: UF -> Int -> Sort -> UF
 union !u !tyv !s =
-    let tyv_root =  find u tyv 
-        sort_root = getRep u s 
+    let !tyv_root =  find u tyv 
+        !sort_root = getRep u s 
     in
     if tyv_root == sort_root then u else unionVals u tyv_root sort_root
 
